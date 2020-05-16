@@ -1,4 +1,5 @@
 # pretty
+[![Build Status](https://travis-ci.org/ackneal/pretty.svg?branch=master)](https://travis-ci.com/github/ackneal/pretty)
 
 It's very simple and easy way to pretty print JSON on terminal.
 
