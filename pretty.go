@@ -15,8 +15,8 @@ const (
 )
 
 var (
-        i      = flag.Int("i", 4, "")
-        t      = flag.String("t", "", "")
+        i = flag.Int("i", 4, "")
+        t = flag.String("t", "", "")
 )
 
 var usage = `Usage:  pretty [OPTIONS] <JSON STRING>
