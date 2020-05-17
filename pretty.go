@@ -34,19 +34,16 @@ func main() {
                 fmt.Fprint(os.Stderr, usage)
         }
         flag.Parse()
-        stat, _ := os.Stdin.Stat()
         var s string
+        if flag.NArg() != 0 {
+                s = flag.Args()[0]
+        }
+        stat, _ := os.Stdin.Stat()
         if stat.Mode()&os.ModeCharDevice == 0 {
                 if b, err := ioutil.ReadAll(os.Stdin); err == nil {
                         s = string(b)
                 }
-        } else {
-                args := flag.Args()
-                if len(args) != 0 {
-                        s = args[0]
-                }
         }
-
         h := json.RawMessage(s)
         b, _ := json.MarshalIndent(&h, "", resolveIndent())
         os.Stdout.Write(b)
