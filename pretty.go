@@ -57,17 +57,14 @@ func resolveIndent() string {
         if s := resolveIndentFromText(); len(s) != 0 {
                 return s
         }
-
         i := *i
         if i > indentMaxLength {
                 i = indentMaxLength
         }
-
         var b strings.Builder
         for n := 0; n < i; n++ {
                 b.WriteString(" ")
         }
-
         return b.String()
 }
 
