@@ -42,34 +42,36 @@ func TestResolveIndent(t *testing.T) {
 }
 
 func TestResolveIndentFromText(t *testing.T) {
-        oldArgs := os.Args
-        defer func() { os.Args = oldArgs }()
-        os.Args = []string{"cmd", "-t", "text"}
-        flag.Parse()
-        indent := resolveIndent()
-        if indent != "text" {
-                t.Errorf("expected 'test', but got '%s'", indent)
+        tests := []struct {
+                name     string
+                args     []string
+                expected string
+        }{
+                {
+                        "specify indent text",
+                        []string{"cmd", "-t", "text"},
+                        "text",
+                },
+                {
+                        "specify indent text that contains unprintable character",
+                        []string{"cmd", "-t", "\t"},
+                        "\t",
+                },
+                {
+                        "specify indent text that exceeds maximum length",
+                        []string{"cmd", "-t", "0123456789X"},
+                        "0123456789",
+                },
         }
-}
-
-func TestResolveIndentFromUnprintableText(t *testing.T) {
-        oldArgs := os.Args
-        defer func() { os.Args = oldArgs }()
-        os.Args = []string{"cmd", "-t", "\t"}
-        flag.Parse()
-        indent := resolveIndent()
-        if indent != "\t" {
-                t.Errorf("expected <tab>, but got '%s'", indent)
-        }
-}
-
-func TestResolveIndentExceedsMaximumText(t *testing.T) {
-        oldArgs := os.Args
-        defer func() { os.Args = oldArgs }()
-        os.Args = []string{"cmd", "-t", "0123456789X"}
-        flag.Parse()
-        indent := resolveIndent()
-        if indent != "0123456789" {
-                t.Errorf("expected '0123456789', but got '%s'", indent)
+        for _, tc := range tests {
+                t.Run(tc.name, func(t *testing.T) {
+                        oldArgs := os.Args
+                        defer func() { os.Args = oldArgs }()
+                        os.Args = tc.args
+                        flag.Parse()
+                        if got := resolveIndent(); got != tc.expected {
+                                t.Errorf("expected '%s', but got '%s'", tc.expected, got)
+                        }
+                })
         }
 }
