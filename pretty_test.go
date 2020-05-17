@@ -7,31 +7,37 @@ import (
 )
 
 func TestResolveIndent(t *testing.T) {
-        indent := resolveIndent()
-        if indent != "    " {
-                t.Errorf("expected 4 spaces, but got '%s'", indent)
+        tests := []struct {
+                name     string
+                args     []string
+                expected string
+        }{
+                {
+                        "default indent level",
+                        []string{"cmd"},
+                        "    ",
+                },
+                {
+                        "specify indent level",
+                        []string{"cmd", "-i", "2"},
+                        "  ",
+                },
+                {
+                        "specify indent level that exceeds maximum number",
+                        []string{"cmd", "-i", "11"},
+                        "          ",
+                },
         }
-}
-
-func TestResolveIdentFromLevel(t *testing.T) {
-        oldArgs := os.Args
-        defer func() { os.Args = oldArgs }()
-        os.Args = []string{"cmd", "-i", "2"}
-        flag.Parse()
-        indent := resolveIndent()
-        if indent != "  " {
-                t.Errorf("expected 2 spaces, but got '%s'", indent)
-        }
-}
-
-func TestResolveIndentExceedsMaximumLevel(t *testing.T) {
-        oldArgs := os.Args
-        defer func() { os.Args = oldArgs }()
-        os.Args = []string{"cmd", "-i", "11"}
-        flag.Parse()
-        indent := resolveIndent()
-        if indent != "          " {
-                t.Errorf("expected 10 spaces, but got '%s'", indent)
+        for _, tc := range tests {
+                t.Run(tc.name, func(t *testing.T) {
+                        oldArgs := os.Args
+                        defer func() { os.Args = oldArgs }()
+                        os.Args = tc.args
+                        flag.Parse()
+                        if got := resolveIndent(); got != tc.expected {
+                                t.Errorf("expected %d spaces, but got %d", len(tc.expected), len(got))
+                        }
+                })
         }
 }
 
