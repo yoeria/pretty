@@ -44,10 +44,6 @@ func main() {
                         s = string(b)
                 }
         }
-        if len(s) == 0 {
-                flag.Usage()
-                os.Exit(2)
-        }
         h := json.RawMessage(s)
         b, _ := json.MarshalIndent(&h, "", resolveIndent())
         os.Stdout.Write(b)
