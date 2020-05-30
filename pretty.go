@@ -1,22 +1,22 @@
 package main
 
 import (
-        "fmt"
-        "strings"
-        "strconv"
-        "os"
-        "flag"
-        "io/ioutil"
-        "encoding/json"
+	"encoding/json"
+	"flag"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strconv"
+	"strings"
 )
 
 const (
-        indentMaxLength = 10
+	indentMaxLength = 10
 )
 
 var (
-        i = flag.Int("i", 4, "")
-        t = flag.String("t", "", "")
+	i = flag.Int("i", 4, "")
+	t = flag.String("t", "", "")
 )
 
 var usage = `Usage:  pretty [OPTIONS] <JSON STRING>
@@ -30,52 +30,52 @@ Options:
 `
 
 func main() {
-        flag.Usage = func() {
-                fmt.Fprint(os.Stderr, usage)
-        }
-        flag.Parse()
-        var s string
-        if flag.NArg() != 0 {
-                s = flag.Args()[0]
-        }
-        stat, _ := os.Stdin.Stat()
-        if stat.Mode()&os.ModeCharDevice == 0 {
-                if b, err := ioutil.ReadAll(os.Stdin); err == nil {
-                        s = string(b)
-                }
-        }
-        if len(s) == 0 {
-                flag.Usage()
-                os.Exit(2)
-        }
-        h := json.RawMessage(s)
-        b, _ := json.MarshalIndent(&h, "", resolveIndent())
-        os.Stdout.Write(b)
+	flag.Usage = func() {
+		fmt.Fprint(os.Stderr, usage)
+	}
+	flag.Parse()
+	var s string
+	if flag.NArg() != 0 {
+		s = flag.Args()[0]
+	}
+	stat, _ := os.Stdin.Stat()
+	if stat.Mode()&os.ModeCharDevice == 0 {
+		if b, err := ioutil.ReadAll(os.Stdin); err == nil {
+			s = string(b)
+		}
+	}
+	if len(s) == 0 {
+		flag.Usage()
+		os.Exit(2)
+	}
+	h := json.RawMessage(s)
+	b, _ := json.MarshalIndent(&h, "", resolveIndent())
+	os.Stdout.Write(b)
 }
 
 func resolveIndent() string {
-        if s := resolveIndentFromText(); len(s) != 0 {
-                return s
-        }
-        i := *i
-        if i > indentMaxLength {
-                i = indentMaxLength
-        }
-        var b strings.Builder
-        for n := 0; n < i; n++ {
-                b.WriteString(" ")
-        }
-        return b.String()
+	if s := resolveIndentFromText(); len(s) != 0 {
+		return s
+	}
+	i := *i
+	if i > indentMaxLength {
+		i = indentMaxLength
+	}
+	var b strings.Builder
+	for n := 0; n < i; n++ {
+		b.WriteString(" ")
+	}
+	return b.String()
 }
 
 func resolveIndentFromText() string {
-        t := *t
-        if len(t) > indentMaxLength {
-                t = t[:indentMaxLength]
-        }
-        s, err := strconv.Unquote(`"`+t+`"`)
-        if err != nil {
-                return ""
-        }
-        return s
+	t := *t
+	if len(t) > indentMaxLength {
+		t = t[:indentMaxLength]
+	}
+	s, err := strconv.Unquote(`"` + t + `"`)
+	if err != nil {
+		return ""
+	}
+	return s
 }
