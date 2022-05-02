@@ -19,7 +19,7 @@ var (
 	t = flag.String("t", "", "")
 )
 
-var usage = `Usage:  pretty [OPTIONS] <JSON STRING>
+var usage = `Usage:  pretty [OPTIONS] <JSON STRING>/<FILE>
         curl -s http://date.jsontest.com | pretty [OPTIONS]
 
 Options:
