@@ -38,6 +38,9 @@ func main() {
 	if flag.NArg() != 0 {
 		s = flag.Args()[0]
 	}
+	if file, err := os.ReadFile(s); err == nil {
+		s = string(file)
+	}
 	stat, _ := os.Stdin.Stat()
 	if stat.Mode()&os.ModeCharDevice == 0 {
 		if b, err := ioutil.ReadAll(os.Stdin); err == nil {
