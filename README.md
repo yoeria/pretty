@@ -1,13 +1,15 @@
 # pretty
+
 [![Build Status](https://travis-ci.org/ackneal/pretty.svg?branch=master)](https://travis-ci.org/github/ackneal/pretty)
 
 It's very simple and easy way to pretty print JSON on terminal.
 
-### Installation
+## Installation
 
 Install and update this go package with `go get -u github.com/ackneal/pretty`
 
 ### Usage
+
 ```sh
 > curl -s http://date.jsontest.com | pretty
 {
@@ -16,8 +18,8 @@ Install and update this go package with `go get -u github.com/ackneal/pretty`
     "time": "01:47:48 PM"
 }%
 
-> pretty '{"pretty": true}' 
+> pretty '{"pretty": true}'
 {
     "pretty": true
-}%        
+}%
 ```
